@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="a_dao">
+	<!-- 各个Mapper XML文件，默认是不采用cache。在配置文件加一行就可以支持cache -->
+	<cache eviction="LRU" type="com.x.utils.memcache.MemCache2MyBatis"/>
+
+	<resultMap type="com.x.base.model.A" id="bean">
+		<result column="id" property="id"/>
+		<result column="value1" property="value1"/>
+	</resultMap>
+
+	<select id="select" useCache="true" resultMap="bean">
+		SELECT * FROM a LIMIT #{selectPageRows},#{rows}
+	</select>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="string" flushCache="true">
+		INSERT INTO a(value1) VALUES (#{value})
+	</insert>
+	
+	<update id="update" flushCache="true">
+		UPDATE a SET value1=#{a} WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" flushCache="true" parameterType="integer">
+		DELETE FROM a WHERE id=#{id}
+	</delete>
+	
+	<select id="count" useCache="true" resultType="integer">
+		SELECT COUNT(*) FROM a
+	</select>
+</mapper>

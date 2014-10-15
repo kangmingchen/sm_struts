@@ -1,0 +1,17 @@
+Spring + MyBatis 框架结构
+
+值得留意是Showcase里Mybatis+Spring的结合，最新的官方默认做法已经很潮了，不再需要Config.xml， 也不用在编写Dao实现(只需要DAO接口)。
+
+而Showcase里对默认做法还做了两个合理化的改进，第一是DAO们不再叫Mapper而是直接叫回DAO，第二是Mapper.xml们不放在和Entity一样深的目录，放回一个浅的目录。
+
+整个方案是这样的：
+
+在applicationContext.xml中，SqlSessionFactoryBean先指明type Aliases的扫描目录，将所有entity目录配进去，就省掉了用Config.xml的aliase配置。
+在applicationContext.xml中，SqlSessionFactoryBean再指明mapper xml文件的目录，这样就不用将mapper文件放到与entity一样深的目录了。
+在applicationContext.xml中，MapperScannerConfigurer指明需要扫描的DAO接口的目录，动态创建其实现类。
+如果DAO接口在多个目录中，简单的做法是创建一个MyBatisDAO的annotation，所有DAO都用这个annotation标识，然后用annotations属性指定它，那么package配到项目顶层package就可以了。
+DAO接口，方法名必须与Mapper.xml中sql的名称一样。
+Mapper.xml文件，nameSpace属性，必须是DAO接口的完整Class名。
+
+
+ExecutorService线程池
